@@ -30,9 +30,10 @@ def plot_scatter(df, column1, column2):
     ax.set_xlabel(column1)
     ax.set_ylabel(column2)
     ax.grid(True)
-    k, m = np.polyfit(x, y, 1)
-    ix = np.argsort(x)
-    ax.plot(x[ix], (k*x + m)[ix], color="black")
+    return ax
+    # k, m = np.polyfit(x, y, 1)
+    # ix = np.argsort(x)
+    # ax.plot(x[ix], (k*x + m)[ix], color="black")
 
 def plot_bar_chart(df, column, ylabel="Frequency"):
     fig, ax = plt.subplots(figsize=(8, 5))
