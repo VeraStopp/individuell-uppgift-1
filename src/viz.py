@@ -31,9 +31,6 @@ def plot_scatter(df, column1, column2):
     ax.set_ylabel(column2)
     ax.grid(True)
     return ax
-    # k, m = np.polyfit(x, y, 1)
-    # ix = np.argsort(x)
-    # ax.plot(x[ix], (k*x + m)[ix], color="black")
 
 def plot_bar_chart(df, column, ylabel="Frequency"):
     fig, ax = plt.subplots(figsize=(8, 5))
@@ -45,3 +42,12 @@ def plot_bar_chart(df, column, ylabel="Frequency"):
     ax.grid(axis="y")
     plt.xticks(rotation=0)
     plt.tight_layout()
+
+def residual_plot(y_hat, residuals):
+    fig, ax = plt.subplots(figsize=(6, 4))
+    ax.scatter(y_hat, residuals, alpha=0.6)
+    ax.axhline(0, color="black", linewidth=1)
+    ax.set_title("Residuals")
+    ax.set_xlabel("Predicted value (ŷ)")
+    ax.set_ylabel("Residulas (y - ŷ)")
+    plt.show()

@@ -30,13 +30,18 @@ def conf_intervall(x, confidence=0.95):
     return mean - margin, mean + margin
 
 
-def ci_mean_bootstrap(x, B=5000, confidence=0.95):   
+def ci_mean_bootstrap(x, B=5000, confidence=0.95, seed=42):   
     x = np.asarray(x, dtype=float)
-    n = len(x)
-    boots = np.empty(B)
+    n = x.size
+    rng = np.random.default_rng(seed)
+    boot_means = np.empty(B)
     for b in range(B):
-        boot_sample = np.random.choice(x, size=n)
-        boots[b] = np.mean(boot_sample)
-    lower = np.percentile(boots, 100*confidence / 2)
-    upper = np.percentile(boots, 100*(1 - confidence / 2))
+        sample = rng.choice(x, size=n, replace=True)
+        boot_means[b] = sample.mean()
+    alpha = 1 - confidence
+    lower = np.percentile(boot_means, 100 * (alpha / 2))
+    upper = np.percentile(boot_means, 100 * (1 - alpha / 2))
     return lower, upper
+
+def regression_prediction(x, intercept_hat, slope_hat):
+    return intercept_hat + slope_hat * x
