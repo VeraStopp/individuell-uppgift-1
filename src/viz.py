@@ -1,53 +1,68 @@
-import matplotlib.pyplot as plt
+import pandas as pd
 import numpy as np
 
-def plot_hist(df, column, bins=30, ylabel="Frequency"):
-    fig, ax = plt.subplots(figsize=(8, 5))
-    ax.hist(df[column], bins=bins, edgecolor="black")
-    ax.set_title(f"Distibution of {column}")
-    ax.set_xlabel(column)
+# def _cat_for_plot(s, missing_label="Unknown"):  
+#     """
+#     Replace NaN values with "Unknown" for categorical variables.
+#     """  
+#     if hasattr(s, "astype"):
+#         s = s.astype("object")
+#     try:
+#         return s.fillna(missing_label)
+#     except Exception:
+#         return s
+    
+def _num_for_plot(s):
+    try:
+        return pd.to_numeric(s, errors="coerce")
+    except Exception:
+        return s
+
+
+def plot_hist(ax, x, title, xlabel, ylabel, bins=30, grid=True):
+    """
+    Create a histogram.
+    """
+    x = _num_for_plot(x)
+    ax.hist(x, bins=bins, edgecolor="black")
+    ax.set_title(title)
+    ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
-    ax.grid(axis="y")
-    plt.tight_layout()
-    plt.show()
-
-def plot_box_by_group(df, column, group):
-    fig, ax = plt.subplots(figsize=(8, 5))
-    df.boxplot(column=column, by=group, ax=ax)
-    ax.set_title(f"{column} per {group}")
-    plt.suptitle("")
-    ax.set_xlabel(group)
-    ax.set_ylabel(column)
-    plt.tight_layout()
-    plt.show()
-
-def plot_scatter(df, column1, column2):
-    x = df[column1].to_numpy()
-    y = df[column2].to_numpy()
-    fig, ax = plt.subplots(figsize=(8, 5))
-    ax.scatter(x, y)
-    ax.set_title(f"{column1} vs. {column2}")
-    ax.set_xlabel(column1)
-    ax.set_ylabel(column2)
-    ax.grid(True)
+    ax.grid(grid, axis="y")
     return ax
 
-def plot_bar_chart(df, column, ylabel="Frequency"):
-    fig, ax = plt.subplots(figsize=(8, 5))
-    counts = df[column].value_counts()
-    counts.plot(kind="bar", color=["green", "red"], edgecolor="black", ax=ax)
-    ax.set_title(f"Frequency of {column}")
-    ax.set_xlabel(column)
+def boxplot_by_group(ax, df, values, group, title, xlabel, ylabel, grid=True):
+    """
+    Create boxplot of a column grouped by antoher column. 
+    """
+    df.boxplot(column=values, by=group, ax=ax)
+    ax.set_title(title)
+    ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
-    ax.grid(axis="y")
-    plt.xticks(rotation=0)
-    plt.tight_layout()
+    ax.grid(grid, axis="y")
+    return ax
 
-def residual_plot(y_hat, residuals):
-    fig, ax = plt.subplots(figsize=(6, 4))
-    ax.scatter(y_hat, residuals, alpha=0.6)
-    ax.axhline(0, color="black", linewidth=1)
-    ax.set_title("Residuals")
-    ax.set_xlabel("Predicted value (ŷ)")
-    ax.set_ylabel("Residulas (y - ŷ)")
-    plt.show()
+def plot_scatter(ax, x, y, title, xlabel, ylabel, alpha=0.6, grid=True):
+    """
+    Create scatter plot.
+    """
+    x = _num_for_plot(x)
+    y = _num_for_plot(y)
+    ax.scatter(x, y, alpha=alpha)
+    ax.set_title(title)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.grid(grid)
+    return ax
+
+def plot_barchart(ax, x, title, xlabel, ylabel="Frequency", grid=True):
+    """
+    Create a bar chart for a categorical variable
+    """
+    counts = x.value_counts()
+    counts.plot(kind="bar", edgecolor="black", ax=ax)
+    ax.set_title(title)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.grid(grid, axis="y")
+    return ax
