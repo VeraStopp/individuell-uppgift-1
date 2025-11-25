@@ -22,8 +22,11 @@ def simulating_proportions(df, column, size):
     proportions = df[column].value_counts(normalize=True)
     p_1 = proportions[1]
     simulated = np.random.binomial(n=1, p=p_1, size=size)
-    print(f"Proportion of 1 in sample: {p_1}")
-    print(f"Simulated proportion of 1 with the sample size of {size}: {simulated.mean()}")
+    print(f"""
+    Proportion of 1 in sample : {p_1}                               
+    Simulated proportion of 1 with the sample size of {size} : {simulated.mean()}
+    """)
+   
 
 
 def conf_intervall(x, confidence=0.95):
