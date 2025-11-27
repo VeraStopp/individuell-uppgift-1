@@ -1,23 +1,22 @@
 import numpy as np
 from scipy import stats
 from sklearn.linear_model import LinearRegression
-
-def summary_data(df, columns):
-    for col in columns:
-        print(
-        f"""\nSummary for {col}:
-            Mean: {df[col].mean():.2f}
-            Median: {df[col].median():.2f}
-            Min: {df[col].min()}
-            Max: {df[col].max()}
-              """)
         
 
 def simulating_proportions(df, column, size):
     """
-    Calculate the observered proprotion of the value 1 in a specific column in a DataFrame,
-    and then simulate how the proportion can look in a random sample of given size.
+    Simulate binary outcomes based on the observed proportion of 1's in the dataset.
+
+    Parameters:
+        df: Pandas DataFrame.
+        column: Name of the column from wich to estimate the proportion of 1's.
+        size: Number of simulated binary observations to generate.
+
+    Returns:
+        Prints the observed proportions of 1's and the simulated proportion. 
     """
+    if column not in df.columns:
+        raise ValueError(f"The column "{column}" doesn't exist in the DataFrame.")
     np.random.seed(42)
     proportions = df[column].value_counts(normalize=True)
     p_1 = proportions[1]
@@ -31,7 +30,14 @@ def simulating_proportions(df, column, size):
 
 def conf_intervall(x, confidence=0.95):
     """
-    Calculate the mean confidence intervall for the values in a DataFrame column.
+    Calculate the confidence intervall for the mean of a sample using the t-distrubution.
+    
+    Parameters:
+        x: Array-like sequence of numeric observations.
+        confidence: Confidence level (0 and 1). Optional. Default is 0.95
+    
+    Returns:
+        A tuple (lower, upper) representing the calculated confidence intervall.
     """
     mean = x.mean()
     std = x.std(ddof=1)
@@ -43,7 +49,13 @@ def conf_intervall(x, confidence=0.95):
 
 def ci_mean_bootstrap(x, B=5000, confidence=0.95, seed=42):   
     """
-    Calculate the mean confidence intervall for the values in a DataFrame column using bootstrap method.
+    Calculate the confidence intervall for the mean of a sample using bootstrap method.
+
+    Parameters:
+        x: Array-like sequence of numeric observations.
+        B: Number of bootstrap samples to generate. Default is 5000
+        confidence: Confidence level (0 and 1). Default is 0.95.
+        seed: Random seed for reproducibility. Default is 42.
     """
     x = np.asarray(x, dtype=float)
     n = x.size
@@ -58,6 +70,22 @@ def ci_mean_bootstrap(x, B=5000, confidence=0.95, seed=42):
     return lower, upper
 
 def regression(df, x, y):
+    """
+    Fit a simple linear regression model using one predictor variable.
+
+    Parameters:
+        df: Pandas DataFrame.
+        x: Name of the column to use as the predictor variable.
+        y: Name of the column to use as the response variable.
+    
+    Returns:
+        A tuple containing:
+            intercept_hat: Estimated intercept of the regression line.
+            slope_hat: Estimated slope coefficient.
+            r2: R-squared.
+            y_hat: Predicted values from the fitted model.
+            residulas: Differense between observed and predicted values.
+    """
     x = df[[x]].values
     y = df[y].values
     linreg = LinearRegression()
@@ -73,7 +101,36 @@ def regression(df, x, y):
 
 def regression_prediction(x, intercept_hat, slope_hat):
     """
-    Using the redression to predict y-value given a specific x-value
+    Calculate the predicted value from a linear regression model.
+
+    Parameters:
+        x: Numeric value or array-like input for which to calculate predictions.
+        intercept_hat: Estimated intercept of the regression line.
+        slope_hat: Estimated slope coefficient.
     """
     return intercept_hat + slope_hat * x
+
+def plot_scatter(ax, x, y, title, xlabel, ylabel, alpha=0.6, grid=True):
+        """
+        Create a scatter plot of two numeric variables.
+
+        Parameters:
+            ax: A Matplotlib axes to draw thr plot onto.
+            column1: The numeric variable for the x-axis.
+            column2: The numeric variable for the y-axis.
+            title: The title of the plot.
+            xlabel: The label for the x-axis.
+            ylabel: The label for the y-axis.
+            alpha: Default is 0.6.
+            grid: Default is True.
+
+        Returns:
+            The Matplotlib axes (ax) with the box plot drawn.
+        """
+        ax.scatter(x, y, alpha=alpha)
+        ax.set_title(title)
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
+        ax.grid(grid)
+        return ax
 
