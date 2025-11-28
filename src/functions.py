@@ -16,7 +16,7 @@ def simulating_proportions(df, column, size):
         Prints the observed proportions of 1's and the simulated proportion. 
     """
     if column not in df.columns:
-        raise ValueError(f"The column "{column}" doesn't exist in the DataFrame.")
+        raise ValueError(f"The column '{column}' doesn't exist in the DataFrame.")
     np.random.seed(42)
     proportions = df[column].value_counts(normalize=True)
     p_1 = proportions[1]
