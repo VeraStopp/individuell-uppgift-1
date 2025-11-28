@@ -24,7 +24,7 @@
 - ![Scatterplot över sambandet med regressionslinje](images/fig_reg_BP_age.png)
 
 ### Regressionsanalys: Systoliskt bloodtryck och kolesterol
-- Systoliskt bloodtryck ses när kolesterolvärdet ökar, ca 5.65 mmHg per 1 ökning i mmol/L.
+- Systoliskt bloodtryck ses när kolesterolvärdet ökar, ca 5.56 mmHg per 1 ökning i mmol/L.
 - R²-värde: 14% så modellen har låg förklaringsgrad.
 - ![Scatterplot över sambandet med regressionslinje](images/fig_reg_BP_chol.png)
 
@@ -43,7 +43,7 @@
 ## Kom igång
 ```
 # Klona projektet
-git clone http://....
+git clone https://github.com/VeraStopp/individuell-uppgift-1.git
 
 # Skapa och aktivera virituell miljö
 python -m venv .venv
